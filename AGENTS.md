@@ -1,7 +1,7 @@
 # AGENTS.md
 
 ## Purpose
-- This folder is for Computer System Architecture summaries based on source files in `raw`.
+- This folder is for my lecture summaries based on source files in `raw`.
 - All summary files must be stored in `summary`.
 
 ## Source of Truth
@@ -24,15 +24,6 @@
 - Use real-world examples when they improve understanding.
 - Keep important technical terms in English when useful.
 
-## File Layout
-- Create and maintain these files:
-- `summary/01-contemporary-architecture.md`
-- `summary/02-cache-memory-organization-1.md`
-- `summary/03-virtual-memory-memory-organization-2.md`
-- `summary/04-storage-architecture.md`
-- `summary/05-quantum-computing.md`
-- `summary/06-gpu.md`
-
 ## Q&A Rules
 - Every summary file must always end with a `## Q&A` section.
 - When the user asks a new question, answer it and add it to the `Q&A` section of the most relevant chapter.
@@ -50,3 +41,8 @@
 - Keep the summary structure and writing style consistent.
 - Do not delete existing Q&A entries unless the user explicitly asks.
 - When revising a summary, preserve both the main content and earlier useful Q&A unless they need correction.
+
+## README Update Rule
+- Maintain `README.md` as the high-level guide to this repository.
+- Update `README.md` whenever repository workflow, structure, rules, or available skills change.
+- Do not update `README.md` for routine content-only changes in `raw/` or `summary/` alone.
