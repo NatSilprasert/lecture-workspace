@@ -5,6 +5,7 @@ This workspace is used to maintain summaries of my lectures.
 ## Project Structure
 
 ```text
+.
 ├── AGENTS.md       Repo-specific rules for updating summaries, Q&A, and workflow behavior. 
 ├── README.md       Quick guide for anyone continuing work in this workspace.
 ├── raw/            Source files such as lecture PDFs and reading materials.
