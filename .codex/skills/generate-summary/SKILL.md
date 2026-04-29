@@ -20,11 +20,13 @@ Use this skill when new source material appears under `raw/` and needs a matchin
 3. Identify raw files that do not yet have an appropriate summary output.
 4. For each missing item:
    - derive a clear markdown filename
-   - place it in the mirrored path under `summary/`
+   - place it in the mirrored path under summary/
    - summarize in Thai
+   - structure the summary according to the original headings/topics in the source
+   - ensure all important content from the source is fully covered (no missing key points)
    - cover the important points from the source
    - keep technical terms in English when useful
-   - do not add `## Q&A` unless the user explicitly asks for Q&A
+   - do not add ## Q&A unless the user explicitly asks for Q&A
 5. If an existing summary already corresponds to the source, update it instead of creating a duplicate.
 
 ## Matching Rules

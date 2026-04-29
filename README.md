@@ -30,7 +30,7 @@ Just ask the AI a question about your lecture through an AI agent such as Codex,
 
 | Skill | Purpose |
 | --- | --- |
-| `active-recall` | Generate 10 active-recall questions from a chapter Q&A, creating more Q&A first if needed. |
+| `active-recall` | Generate 10 active-recall questions from a chapter Q&A, creating more Q&A first if needed, and prefer an interactive multiple-choice artifact when supported. |
 | `add-qna` | Add 5 new non-duplicate Q&A items to a specified summary file, grounded only in `raw/` or the matching chapter summary. |
 | `refactor-summary` | Rewrite a summary to be shorter, smoother, and easier to review before exams. |
 | `generate-summary` | Find files in `raw/` that do not yet have summaries and create matching summary files. |
