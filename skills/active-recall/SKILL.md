@@ -1,5 +1,5 @@
 ---
-name: active-call
+name: active-recall
 description: Use when the user wants active recall practice from a specific chapter or summary file. Pull 10 short questions from that chapter's Q&A; if fewer than 10 exist, create additional non-duplicate Q&A from the chapter body and add them to the same summary file before asking the questions.
 ---
 
