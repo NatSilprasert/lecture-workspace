@@ -10,7 +10,7 @@ Use this skill when the user asks to add more review questions to a chapter.
 ## Workflow
 
 1. Identify the target summary file from the chapter number, title, or explicit path.
-2. Read the chapter body and current `## Q&A` section.
+2. Read the chapter body and current `## Q&A` section if it exists.
 3. Read the corresponding `raw` source for the same chapter when available, and use it as the primary source of truth.
 4. Generate exactly 5 new Q&A entries.
 5. Ensure each new item:
@@ -20,7 +20,8 @@ Use this skill when the user asks to add more review questions to a chapter.
    - matches the chapter's current tone and wording
    - is directly supported by either the chapter body in `summary` or the matching file in `raw`
 6. Before appending, verify that each question-answer pair can be traced back to a specific statement in `raw` or `summary`.
-7. Append the new entries to the end of the `## Q&A` section.
+7. If the file does not yet have a `## Q&A` section, create it first.
+8. Append the new entries to the end of the `## Q&A` section.
 
 ## Content Rules
 
@@ -29,6 +30,7 @@ Use this skill when the user asks to add more review questions to a chapter.
 - Keep answers concise.
 - Prefer conceptual questions that help with exam review.
 - If the user asked about a confusing topic, also refine the main chapter body to clarify that topic.
+- Create the `## Q&A` section only as part of an explicit Q&A request.
 
 ## Guardrails
 

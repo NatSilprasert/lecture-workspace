@@ -24,7 +24,7 @@ Use this skill when new source material appears under `raw/` and needs a matchin
    - summarize in Thai
    - cover the important points from the source
    - keep technical terms in English when useful
-   - end with `## Q&A`
+   - do not add `## Q&A` unless the user explicitly asks for Q&A
 5. If an existing summary already corresponds to the source, update it instead of creating a duplicate.
 
 ## Matching Rules
@@ -38,3 +38,4 @@ Use this skill when new source material appears under `raw/` and needs a matchin
 - Use `raw` as the primary source of truth.
 - Do not contradict the slides or source document.
 - Keep summaries concise and easy to study from.
+- Leave Q&A out of newly generated summaries unless the user explicitly asks for it.

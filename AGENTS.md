@@ -25,7 +25,8 @@
 - Keep important technical terms in English when useful.
 
 ## Q&A Rules
-- Every summary file must always end with a `## Q&A` section.
+- Do not create a `## Q&A` section by default when generating a new summary.
+- Create a `## Q&A` section only when the user asks a question or explicitly asks for Q&A/review questions.
 - When the user asks a new question, answer it and add it to the `Q&A` section of the most relevant chapter.
 - Q&A entries must always stay short.
 - If one question could fit multiple chapters, choose the single most relevant file unless the user says otherwise.
