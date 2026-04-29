@@ -2,15 +2,17 @@
 
 This workspace is used to maintain summaries of my lectures.
 
+This repo also includes project-local Codex skills for summary maintenance and study workflows.
+
 ## Project Structure
 
 ```text
 .
 ├── AGENTS.md       Repo-specific rules for updating summaries, Q&A, and workflow behavior. 
 ├── README.md       Quick guide for anyone continuing work in this workspace.
+├── .codex/skills/  Project-local Codex skills used only in this repository.
 ├── raw/            Source files such as lecture PDFs and reading materials.
 ├── summary/        Thai summaries derived from files in raw/. Each file should end with a Q&A section.
-└── skills/         Reusable local skills for common summary and homework workflows.
 ```
 
 ## How To Use

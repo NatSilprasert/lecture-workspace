@@ -1,0 +1,4 @@
+interface:
+  display_name: "Generate Summary"
+  short_description: "Create missing Thai summaries from raw lecture files."
+  default_prompt: "Use $generate-summary to create any missing Thai lecture summaries from raw/ into summary/."

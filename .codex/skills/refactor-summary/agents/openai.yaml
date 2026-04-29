@@ -1,0 +1,4 @@
+interface:
+  display_name: "Refactor Summary"
+  short_description: "Tighten a chapter summary for faster exam review."
+  default_prompt: "Use $refactor-summary to rewrite this summary so it is shorter, clearer, and easier to study."

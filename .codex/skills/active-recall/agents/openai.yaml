@@ -1,0 +1,4 @@
+interface:
+  display_name: "Active Recall"
+  short_description: "Create chapter recall questions from summary Q&A."
+  default_prompt: "Use $active-recall to generate 10 short active-recall questions from the target chapter."

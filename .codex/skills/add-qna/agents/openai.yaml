@@ -1,0 +1,4 @@
+interface:
+  display_name: "Add Q&A"
+  short_description: "Append five grounded Q&A items to a chapter."
+  default_prompt: "Use $add-qna to add 5 new short, non-duplicate Q&A items to the relevant summary file."
