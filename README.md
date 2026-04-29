@@ -8,11 +8,11 @@ This repo also includes project-local Codex skills for summary maintenance and s
 
 ```text
 .
-├── AGENTS.md       Repo-specific rules for updating summaries, Q&A, and workflow behavior. 
-├── README.md       Quick guide for anyone continuing work in this workspace.
 ├── .codex/skills/  Project-local Codex skills used only in this repository.
 ├── raw/            Source files such as lecture PDFs and reading materials.
 ├── summary/        Thai summaries derived from files in raw/. Q&A is added only when asked.
+├── AGENTS.md       Repo-specific rules for updating summaries, Q&A, and workflow behavior. 
+├── README.md       Quick guide for anyone continuing work in this workspace.
 ```
 
 ## How To Use
