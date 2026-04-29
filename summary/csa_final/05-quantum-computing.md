@@ -268,8 +268,27 @@ QPE เป็น primitive สำคัญในอัลกอริทึม�
   ตอบ: คือสถานะที่ qubit อยู่ได้หลายความเป็นไปได้พร้อมกัน เช่น `alpha|0> + beta|1>` ยังไม่ยุบเป็น 0 หรือ 1 จนกว่าจะวัด
 - ถาม: interference effect คืออะไร?
   ตอบ: คือการที่ amplitude ของสถานะควอนตัมเสริมกันหรือหักล้างกันตาม phase ทำให้บางคำตอบเด่นขึ้นและบางคำตอบหายไป ซึ่งเป็นกลไกสำคัญของ quantum algorithm
-- teleportation และ superdense coding แสดงพลังของ entanglement
-- algorithm สำคัญในบทนี้คือ Deutsch-Jozsa, Grover, QFT, QPE, Shor
-
-## Q&A
-ยังไม่มีคำถามในบทนี้
+- ถาม: quantum teleportation แสดงอะไรสำคัญ?
+  ตอบ: แสดงการส่งต่อสถานะ qubit ด้วย entanglement และ 2 classical bits โดยไม่ copy สถานะเดิม.
+- ถาม: algorithm สำคัญที่บทนี้ยกมามีอะไรบ้าง?
+  ตอบ: `Deutsch-Jozsa`, `Grover`, `QFT`, `QPE` และ `Shor`.
+- ถาม: qubit ต่างจาก bit คลาสสิกยังไง?
+  ตอบ: qubit อยู่ใน superposition ได้ก่อนถูกวัด.
+- ถาม: การวัดสถานะ qubit ส่งผลอะไร?
+  ตอบ: ค่าจะ collapse ไปเป็นผลลัพธ์หนึ่งตามความน่าจะเป็น.
+- ถาม: ทำไม amplitude ต้องเป็นจำนวนเชิงซ้อน?
+  ตอบ: เพื่ออธิบายทั้งขนาดและ phase ของสถานะ.
+- ถาม: Hadamard gate ใช้ทำอะไรบ่อย?
+  ตอบ: ใช้สร้าง superposition จาก basis state.
+- ถาม: X กับ Z gate ต่างหน้าที่กันอย่างไร?
+  ตอบ: X พลิกบิต ส่วน Z พลิก phase.
+- ถาม: entanglement สำคัญเพราะอะไร?
+  ตอบ: ทำให้ความสัมพันธ์ของหลาย qubits เกินการแยกอิสระ.
+- ถาม: CNOT ต้องมีองค์ประกอบอะไร?
+  ตอบ: มี control qubit และ target qubit.
+- ถาม: reversible computation สำคัญใน quantum ยังไง?
+  ตอบ: evolution ควรเป็น unitary จึงย้อนกลับได้.
+- ถาม: Bloch sphere ใช้กับกรณีไหนตรงที่สุด?
+  ตอบ: ใช้ภาพสถานะของ qubit เดี่ยวแบบ pure state.
+- ถาม: Bell state พื้นฐานสร้างอย่างไร?
+  ตอบ: ใช้ `H` กับ qubit แรก แล้วตามด้วย `CNOT`.

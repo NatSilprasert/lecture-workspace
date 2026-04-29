@@ -235,3 +235,23 @@ Flow เวลา CPU เรียกข้อมูล (แบบเห็น�
   ตอบ: คือการ lookup cache และ TLB พร้อมกันเพื่อลดเวลาเข้าถึงหน่วยความจำ โดยอาศัยบิต `page offset` ที่ไม่เปลี่ยนระหว่าง virtual กับ physical address ทำให้เริ่มหา cache ได้ก่อนรอแปล address เสร็จทั้งหมด
 - ถาม: TLB คืออะไร และ flow ตอนเรียกข้อมูลเป็นยังไง?
   ตอบ: TLB คือ cache ของผลแปล virtual page -> physical frame; flow คือ CPU หาใน TLB ก่อน, ถ้า hit ไปต่อได้ทันที, ถ้า miss ต้องอ่าน page table, และถ้า page ไม่อยู่ใน RAM จะเกิด page fault ให้ OS โหลดจาก disk
+- ถาม: virtual memory ให้ประโยชน์หลักอะไรกับโปรแกรม?
+  ตอบ: ได้ address space ใหญ่และแยกกันปลอดภัย.
+- ถาม: page ต่างจาก page frame ยังไง?
+  ตอบ: page อยู่ฝั่ง virtual ส่วน frame อยู่ฝั่ง physical.
+- ถาม: page fault เกิดเมื่อไร?
+  ตอบ: เมื่อ page ที่อ้างยังไม่อยู่ใน RAM.
+- ถาม: TLB มีไว้ทำอะไร?
+  ตอบ: cache ผลแปล address เพื่อลดเวลาเดิน page table.
+- ถาม: ถ้า TLB miss จะเกิดอะไรต่อ?
+  ตอบ: ต้องไป lookup page table ก่อนเข้าถึงข้อมูลจริง.
+- ถาม: เมื่อไหร่ `overlapped cache & TLB access` ทำไม่ได้?
+  ตอบ: เมื่อบิต index ของ cache ล้ำออกจาก `page offset` จน lookup ล่วงหน้าไม่ปลอดภัย.
+- ถาม: สไลด์เสนอวิธีแก้อะไรเมื่อ overlap ทำไม่ได้?
+  ตอบ: ใช้ page ใหญ่ขึ้น, ใช้ set-associative cache หรือให้ software ช่วยรับประกันบิตบางตำแหน่ง.
+- ถาม: ใครเป็นคนจัดการ replacement ใน virtual memory?
+  ตอบ: โดยหลักคือ operating system.
+- ถาม: การใช้ virtual address เข้า cache ตรง ๆ เสี่ยงปัญหาอะไร?
+  ตอบ: เสี่ยง aliasing หรือ synonym issues เมื่อหลาย VA map ไป PA เดียวกัน.
+- ถาม: ตอน process switch ต้องพิจารณาอะไรบ้าง?
+  ตอบ: ต้องพิจารณา `TLB`, `page table` และ `cache`.

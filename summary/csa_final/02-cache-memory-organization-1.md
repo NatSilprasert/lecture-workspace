@@ -276,3 +276,23 @@
 ## Q&A
 - ถาม: temporal locality vs spatial locality ต่างกันยังไง?
   ตอบ: temporal locality คือใช้ "ข้อมูลเดิม" ซ้ำในเวลาใกล้กัน ส่วน spatial locality คือใช้ "ข้อมูลที่อยู่ใกล้กันใน memory" ต่อเนื่องกัน เช่น อ่านตัวแปรเดิมซ้ำ ๆ เทียบกับเดินอ่านสมาชิก array ที่ติดกัน
+- ถาม: ทำไม cache ถึงแก้ memory wall ได้?
+  ตอบ: เก็บข้อมูลที่น่าจะใช้ซ้ำไว้ใกล้ CPU.
+- ถาม: temporal locality กับ spatial locality ต่างกันยังไง?
+  ตอบ: temporal คือใช้ข้อมูลเดิมซ้ำ ส่วน spatial คือใช้ตำแหน่งใกล้เคียงกัน.
+- ถาม: miss penalty สูงมีผลยังไง?
+  ตอบ: ทำให้ access time เฉลี่ยสูงขึ้นมาก.
+- ถาม: direct-mapped เสี่ยง miss แบบไหนเด่น?
+  ตอบ: conflict miss จากการชน index เดิม.
+- ถาม: set-associative ช่วยอะไรเมื่อเทียบ direct-mapped?
+  ตอบ: ลด conflict miss เพราะมีหลาย ways ให้เลือก.
+- ถาม: fully associative แลกอะไรเพื่อได้ miss ต่ำ?
+  ตอบ: แลกฮาร์ดแวร์แพงและเทียบ tag ซับซ้อนขึ้น.
+- ถาม: write-back ดีกับงานแบบไหน?
+  ตอบ: งานที่เขียนซ้ำบ่อย เพราะไม่ต้อง write memory ทุกครั้ง.
+- ถาม: write-through เด่นเรื่องอะไร?
+  ตอบ: ความสอดคล้องกับ main memory เข้าใจง่ายกว่า.
+- ถาม: write-allocate เหมาะเมื่อไร?
+  ตอบ: เมื่อคาดว่าจะเขียน block เดิมซ้ำหลัง miss.
+- ถาม: เขียนโค้ดอย่างไรให้ cache ทำงานดีขึ้น?
+  ตอบ: จัด access ให้ต่อเนื่องและ reuse ข้อมูลใกล้เวลาเดิม.

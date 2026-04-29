@@ -35,11 +35,14 @@
 
 - เหมาะกับงานที่รูปแบบซ้ำกัน เช่น บวกเวกเตอร์ คูณเมทริกซ์ ประมวลผลภาพ
 - ตัวอย่างผลิตภัณฑ์: Intel MMX, SSE, AVX, Apple/IBM Altivec, GPU
-- ต่างจาก array processor ตรงที่ vector processor มักประมวลผลข้อมูลหลายตัวต่อเนื่องตามเวลา ส่วน array processor คือหลายตัวพร้อมกันในเชิงพื้นที่
+- `Vector processor` ใช้ functional units ชุดเดิมประมวลผลสมาชิกของ vector ต่อเนื่องกันเป็นสาย จึงเด่นเรื่องการ feed ข้อมูลเป็นลำดับยาว ๆ และลด overhead ของ loop
+- `Array processor` มี processing elements หลายตัววางขนานกันในฮาร์ดแวร์ แต่ละตัวทำงานบนข้อมูลคนละชิ้นพร้อมกันจริงในเวลาเดียวกัน
+- สรุปสั้น ๆ: vector processor เน้น "ขนานตามเวลา" ผ่านคำสั่ง vector เดียว ส่วน array processor เน้น "ขนานตามพื้นที่" ผ่านหน่วยคำนวณหลายตัว
 
 ตัวอย่างจริง:
 - สั่ง "ทำบะหมี่ 10 ถ้วย" ครั้งเดียว แทนสั่งทีละถ้วย
 - คำสั่ง `C = A + B` ที่ compiler vectorize แล้วจะใช้ SIMD instruction แทน loop ธรรมดา
+- ถ้าเทียบแบบเห็นภาพ: vector processor เหมือนสายพาน 1 เส้นที่ป้อนของหลายชิ้นต่อกัน ส่วน array processor เหมือนมีคนงานหลายคนยืนคนละจุดแล้วทำพร้อมกัน
 
 ## 4) Pipelining
 แบ่งการทำงานของคำสั่งออกเป็นหลาย stage แล้วให้คำสั่งหลายตัวอยู่คนละ stage พร้อมกัน
@@ -139,6 +142,10 @@ flow ตัวอย่าง (เห็นภาพเร็ว):
 - multiple-cycle ช่วยได้เล็กน้อย
 - pipeline ช่วยได้มากขึ้น
 - superscalar, superpipeline และ VLIW ช่วยเพิ่ม speedup ตาม degree ที่ขยาย
+- ถ้ามี pipeline แยกกันคนละชนิด เช่น `integer unit` กับ `floating-point unit` และคำสั่ง 2 กลุ่มนี้วิ่งซ้อนกันได้ เวลารวมจะถูกกำหนดโดยสายที่เสร็จช้ากว่า
+- จึงคิดคร่าว ๆ ได้ว่า `CPU Time = Max(Int, FP)` ไม่ใช่ `Int + FP` เพราะ 2 กลุ่มทำงาน overlap กัน
+- โดย `เวลารวมแบบเดิม` หมายถึงเวลาตอนยังไม่ได้ใช้การ overlap ของ 2 pipelines หรือคิดแบบทำต่อกันทีละส่วน จึงมักเป็น `Int + FP`
+- ดังนั้น `Potential Speedup = เวลารวมแบบเดิม / Max(Int, FP)` และในตัวอย่างคือ `19 / Max(7,12) = 19 / 12 ≈ 1.6`
 
 แต่ performance จริงไม่ถึงค่าทฤษฎีเสมอ เพราะ:
 - latency ของแต่ละ operation ไม่เท่ากัน
@@ -206,8 +213,10 @@ compiler มีบทบาทมากในการเปิดโอกา�
 
 - multicore คือมีหลาย core อยู่บน chip เดียว
 - แต่ละ core อาจเป็น superscalar อยู่แล้ว
-- `Simultaneous Multithreading (SMT)` คือดึงคำสั่งจากหลาย thread เข้ามาเติม pipeline พร้อมกัน
+- `Simultaneous Multithreading (SMT)` คือดึงคำสั่งจากหลาย thread เข้ามาเติม pipeline พร้อมกันใน core เดียว เพื่อไม่ให้ execution units ว่าง
 - Intel เรียก implementation นี้ว่า `Hyper-Threading`
+- ตัวอย่างภาพง่าย: ถ้า thread A ติดรอ load จาก memory, core ไม่ต้องปล่อยช่องใน pipeline ว่าง แต่หยิบคำสั่งของ thread B ที่พร้อมอยู่เข้ามาทำต่อได้ทันที
+- ดังนั้น SMT ไม่ได้ทำให้ 1 thread เดียวเร็วขึ้นมากเสมอไป แต่ช่วยเพิ่มการใช้ทรัพยากรของ core และเพิ่ม throughput รวม
 
 ## 14) LLVM
 LLVM เป็นโครงสร้างเครื่องมือ compiler ที่ช่วยทำ optimization และรองรับหลายภาษา/หลาย architecture ผ่าน IR กลาง
@@ -224,4 +233,31 @@ LLVM เป็นโครงสร้างเครื่องมือ compi
   ตอบ: คือพื้นที่ที่ CPU เก็บคำสั่งหลายตัวเพื่อเลือกคำสั่งที่พร้อมทำก่อน ช่วยหลบการรอ dependency/latency, ใช้ execution units ได้เต็มขึ้น และเพิ่ม throughput โดยรวม
 - ถาม: ขอตัวอย่าง flow ของ out-of-order issue/out-of-order completion
   ตอบ: ถ้า `load` ตัวแรกช้า CPU จะไม่รอเฉยๆ แต่หยิบคำสั่งคำนวณที่ไม่ขึ้นกับ load มาทำก่อนให้เสร็จได้ แล้วค่อยกลับมาทำคำสั่งที่ต้องพึ่งผล load เมื่อข้อมูลมา
-
+- ถาม: ILP ต่างจาก TLP แบบสั้น ๆ คืออะไร?
+  ตอบ: ILP ขนานใน stream เดียว ส่วน TLP ขนานหลาย threads.
+- ถาม: ทำไม pipeline เพิ่ม throughput ได้?
+  ตอบ: เพราะหลายคำสั่งอยู่คนละ stage พร้อมกัน.
+- ถาม: superscalar ต่างจาก pipeline ปกติยังไง?
+  ตอบ: superscalar issue ได้หลายคำสั่งต่อ cycle.
+- ถาม: out-of-order ช่วยอะไรเวลามี load ช้า?
+  ตอบ: ให้คำสั่งที่พร้อมก่อนวิ่งแซงได้ ลดเวลารอ.
+- ถาม: `instruction window` มีผลต่อประสิทธิภาพอย่างไร?
+  ตอบ: หน้าต่างใหญ่ขึ้นมักหาคำสั่งที่พร้อมได้มากขึ้น.
+- ถาม: ทำไมต้องมี register renaming?
+  ตอบ: ลด false dependency อย่าง WAR/WAW.
+- ถาม: superpipeline มีข้อแลกเปลี่ยนหลักอะไร?
+  ตอบ: clock สูงขึ้นได้ แต่ hazard/stall กระทบหนักขึ้น.
+- ถาม: VLIW พึ่งใครมากที่สุด?
+  ตอบ: พึ่ง compiler ในการ schedule คำสั่งล่วงหน้า.
+- ถาม: loop unrolling ช่วยจุดไหนเด่นสุด?
+  ตอบ: ลด branch overhead และเปิดช่องให้ reschedule ดีขึ้น.
+- ถาม: SMT ช่วย workload แบบไหนมาก?
+  ตอบ: งานที่มี stall บ่อยและมีหลาย threads พร้อมรัน.
+- ถาม: Array processor ต่างจาก vector processor อย่างไร?
+  ตอบ: vector processor ใช้คำสั่งเดียวประมวลผลข้อมูลหลายตัวต่อเนื่องกัน ส่วน array processor มีหลาย processing elements ทำข้อมูลหลายชิ้นพร้อมกันในเชิงพื้นที่
+- ถาม: ทำไมตัวอย่างที่มี integer pipeline กับ floating-point pipeline ใช้ `CPU Time = Max(Int, FP)`?
+  ตอบ: เพราะสองสายทำงานซ้อนกันได้ เวลารวมจึงขึ้นกับสายที่ใช้เวลานานกว่า ไม่ใช่ผลบวกของทั้งสองสาย
+- ถาม: `เวลารวมแบบเดิม` ในสูตร speedup ของ integer/FP pipelines มาจากไหน?
+  ตอบ: คือเวลาตอนยังไม่ให้ 2 pipelines overlap กัน จึงคิดเป็นเวลารวมแบบทำต่อกัน เช่น `Int + FP`
+- ถาม: SMT คืออะไรแบบเห็นภาพ?
+  ตอบ: ถ้า thread A รอ memory, core จะเอาคำสั่งของ thread B มาใช้ช่อง pipeline ต่อทันที ทำให้หน่วยคำนวณไม่ว่างเปล่า

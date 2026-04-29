@@ -321,3 +321,23 @@ protocol ที่พบบ่อย:
   ตอบ: โดยทั่วไป RAID 0=2, RAID 1=2, RAID 2=3+, RAID 3=3, RAID 4=3, RAID 5=3, RAID 6=4, RAID 10=4, RAID 01=4, RAID 50=6 (ขึ้นกับจำนวนกลุ่ม RAID 5)
 - ถาม: block storage vs file storage ต่างกันยังไง พร้อมตัวอย่าง?
   ตอบ: block คือให้ก้อนดิสก์ดิบให้เครื่องปลายทางจัดการ filesystem เอง (เช่น Amazon EBS, Google Persistent Disk) เหมาะกับ DB/VM; file คือให้แชร์เป็นไฟล์/โฟลเดอร์โดย server ดูแล filesystem (เช่น NAS, Google Filestore) เหมาะกับงานแชร์ไฟล์ทีม
+- ถาม: ทำไม storage ต้องดูทั้ง latency และ throughput?
+  ตอบ: latency กระทบงานสั้น ส่วน throughput กระทบงานยาวต่อเนื่อง.
+- ถาม: HDD ช้าหลัก ๆ เพราะอะไร?
+  ตอบ: มี seek time และ rotational delay เชิงกล.
+- ถาม: SSD เด่นกว่า HDD ตรงไหน?
+  ตอบ: random access ต่ำกว่าและไม่มีชิ้นส่วนหมุน.
+- ถาม: `SAN` ให้ storage แบบไหน?
+  ตอบ: ให้แบบ block storage ผ่าน network.
+- ถาม: `Block storage` เหมาะกับงานแบบไหน?
+  ตอบ: เหมาะกับฐานข้อมูล, VM boot disk และงานที่อยากคุม IOPS/latency ละเอียด.
+- ถาม: RAID 0 ให้ข้อดีหลักอะไร?
+  ตอบ: เพิ่ม performance ด้วย striping แต่ไม่มี redundancy.
+- ถาม: RAID 1 เน้นอะไร?
+  ตอบ: ความทนทานด้วยการ mirror ข้อมูล.
+- ถาม: RAID 5 มีข้อแลกเปลี่ยนอะไร?
+  ตอบ: ประหยัดพื้นที่กว่า mirror แต่ write penalty สูงกว่า.
+- ถาม: `File storage` เหมาะกับงานแบบไหน?
+  ตอบ: เหมาะกับแชร์ไฟล์ในทีม, home directory และงานเอกสารที่หลายคนใช้ร่วมกัน.
+- ถาม: `Deduplication` ช่วยอะไร?
+  ตอบ: ช่วยประหยัดพื้นที่โดยเก็บข้อมูลซ้ำไว้เพียงชุดเดียวแล้วอ้างร่วมกัน.
