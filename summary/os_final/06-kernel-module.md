@@ -7,7 +7,7 @@ Kernel module คือโค้ดที่สามารถโหลดเข
 - เป็นชิ้นส่วนโค้ดที่โหลดและ unload จาก kernel ได้
 - ใช้ขยายฟังก์ชันของ kernel แบบ on demand
 - มองง่าย ๆ ว่าเป็น "ปลั๊กอินของ kernel"
-- คือไม่ต้องฝังทุกอย่างไว้ใน kernel ตั้งแต่แรก
+- ไม่ต้องฝังทุกอย่างไว้ใน kernel ตั้งแต่แรก
 - ถ้าต้องใช้ความสามารถบางอย่าง เช่น driver ของอุปกรณ์ ก็โหลด module นั้นเข้ามาได้ตอนต้องการ
 - ตัวอย่างการใช้งาน:
   - hardware drivers
@@ -23,13 +23,6 @@ flow แบบง่าย:
 6. หลังจากนั้น kernel เรียกใช้ module นี้ได้เมื่อมี event ที่เกี่ยวข้อง
 7. ถ้าไม่ต้องใช้แล้ว สามารถสั่งถอดด้วย `rmmod`
 8. kernel จะเรียก `cleanup_module()` ก่อนเอา module ออก
-
-ตัวอย่างภาพจริง:
-- เสียบอุปกรณ์บางอย่าง
-- kernel ต้องใช้ driver ของอุปกรณ์นั้น
-- จึงโหลด kernel module ที่เกี่ยวข้อง
-- module ลงทะเบียนตัวเอง
-- จากนั้น kernel ใช้ module นี้คุยกับอุปกรณ์ได้
 
 ตัวอย่าง hardware driver:
 - `printer driver`
@@ -99,10 +92,6 @@ flow แบบง่าย:
 - ใช้ file permissions ควบคุมสิทธิ์ของ device
 - ใช้ file operations ในการ access device
 
-ตัวอย่าง:
-- เขียนไปที่ `/dev/lp0` อาจส่งข้อมูลไปยัง printer
-- terminal device ก็เข้าถึงได้ผ่าน device file เช่น `/dev/pts/0`
-
 ## 6) Character vs Block Devices
 - `Character device`
   - ส่งและรับข้อมูลทีละตัวอักษร
@@ -126,23 +115,9 @@ flow แบบง่าย:
 - `major number` = บอกว่า "ต้องเรียก driver ตัวไหน"
 - `minor number` = บอกว่า "เป็นอุปกรณ์ย่อยตัวไหนของ driver นั้น"
 
-ตัวอย่างเห็นภาพ:
-- สมมติ driver ของ disk ใช้ `major = 8`
-- `/dev/sda` อาจเป็น `8,0`
-- `/dev/sda1` อาจเป็น `8,1`
-- `/dev/sda2` อาจเป็น `8,2`
-- ความหมายคือทั้งหมดใช้ disk driver ตัวเดียวกัน
-- แต่ `minor` ต่างกันเพื่อบอกว่าเป็นทั้งดิสก์ทั้งลูก หรือเป็น partition ไหน
-
-อีกตัวอย่าง:
-- `/dev/pts/0` อาจเป็น `136,0`
-- `/dev/pts/1` อาจเป็น `136,1`
-- `major 136` บอกว่าใช้ driver ของ pseudo terminal
-- `minor 0` กับ `1` บอกว่าเป็น terminal คนละตัว
-
 สรุปภาพจำ:
-- `major` = แผนก
-- `minor` = หมายเลขคิวในแผนกนั้น
+- `major` = บอกว่าใช้ driver ตัวไหน
+- `minor` = บอกว่าเป็นอุปกรณ์ย่อยตัวไหน
 
 ## 8) Creating a Device
 - ใช้ `mknod` สร้าง device file ได้

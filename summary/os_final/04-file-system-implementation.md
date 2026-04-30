@@ -2,7 +2,7 @@
 
 ## ภาพรวม
 
-บทนี้อธิบายการ implement file system จริง ตั้งแต่โครงสร้างบน disk และใน memory ไปจนถึงการ mount, การจัดการ directory, การจัดสรร blocks, และการรองรับ file systems หลายชนิด
+บทนี้อธิบายการ implement file system จริง ตั้งแต่โครงสร้างบน disk และใน memory ไปจนถึงการ mount, การจัดการ directory, การจัดสรร blocks, และการรองรับหลาย file systems
 
 ## 1) File-System Structure
 
@@ -65,11 +65,33 @@
 
 flow ตอนเปิดไฟล์แบบย่อ:
 
-1. OS ดู `mount table` และไปยัง volumn นั้น
+1. OS ดู `mount table` และไปยัง `volume` นั้น
 2. หา `directory entry` ของ file system นั้น
 3. ตามไป `FCB/inode`
 4. map ไปยัง disk blocks
 5. อ่านผ่าน driver แล้วส่งข้อมูลกลับให้ process
+
+flow ตอน "อ่านไฟล์" แบบเห็นภาพ:
+
+1. process เรียก `open("file")`
+2. OS ใช้ `mount table` ดูว่า path นี้อยู่บน `volume` และ file system ไหน
+3. OS ค้น `directory entry` ของไฟล์
+4. OS ตามไปยัง `FCB/inode` เพื่อดู metadata และตำแหน่ง blocks
+5. OS ส่งกลับ `file handle` ให้ process
+6. ต่อมา process เรียก `read()`
+7. OS ใช้ข้อมูลใน `file handle` และ `FCB/inode` เพื่อรู้ว่าต้องอ่าน block ไหน
+8. `File organization module` แปลง logical block เป็น physical block
+9. `Basic file system` ขอ block ที่ต้องใช้ และเช็ก `buffer/cache` ก่อน
+10. ถ้ายังไม่มีใน memory, `I/O control layer` และ device driver จะไปอ่านจาก disk
+11. ข้อมูลถูกนำมาไว้ใน buffer/cache ของ kernel
+12. `read()` คัดลอกข้อมูลจาก kernel buffer ไปยัง memory ของ process
+13. file offset ถูกเลื่อนไปตำแหน่งถัดไป
+
+หมายเหตุเรื่อง `MMU`:
+- `MMU` ไม่ได้เป็นชั้นของ file system
+- มันทำงานตอน CPU เข้าถึง `virtual address` ของ process หรือของ kernel
+- ดังนั้นใน flow นี้ `MMU` จะเกี่ยวตอน process เรียก `read()`, ตอน kernel ใช้ memory/buffer, และตอนคัดลอกข้อมูลจาก kernel buffer ไปยัง memory ของ process
+- ส่วนงานหาไฟล์, หา `directory entry`, และ map file blocks เป็นหน้าที่ของ file system ไม่ใช่ `MMU`
 
 ## 5) Partitions and Mounting
 
@@ -93,8 +115,6 @@ flow ตอนเปิดไฟล์แบบย่อ:
 - `VFS` เป็นชั้นกลางที่ทำให้หลาย file systems ใช้ system call เดียวกันได้
 - app จึงเรียก `open()`, `read()`, `write()` แบบเดิมโดยไม่ต้องรู้ว่า backend เป็น `ext4`, `NTFS`, USB หรือ `NFS`
 - หน้าที่ของ `VFS` คือดูว่า path นี้อยู่บน file system ไหน แล้ว dispatch ต่อไปยัง implementation ที่ถูกต้อง
-
-ภาพจำ: app -> `VFS` -> file system ที่เกี่ยวข้อง
 
 ## 7) Virtual File System Implementation
 
@@ -120,7 +140,7 @@ flow ตอนเปิดไฟล์แบบย่อ:
 
 ## 9) Allocation Methods
 
-`allocation method` คือวิธีจัดสรร disk blocks ให้ไฟล์ โดยคำว่า `random access` คือการกระโดดไปยังตำแหน่งที่ต้องการได้ทันที
+`allocation method` คือวิธีจัดสรร disk blocks ให้ไฟล์ โดย `random access` หมายถึงการกระโดดไปยังตำแหน่งที่ต้องการได้ทันที
 
 ### 9.1 Contiguous Allocation
 
@@ -183,8 +203,7 @@ flow ตอนเปิดไฟล์แบบย่อ:
 - ข้อเสีย:
   - มี overhead จาก index block
 
-ภาพจำ:
-
+จำง่าย:
 - `contiguous` = เก็บติดกัน
 - `linked` = เก็บเป็นลูกโซ่
 - `indexed` = มีสารบัญ block ของไฟล์
@@ -267,6 +286,10 @@ A: มักเกิดตอนบูตเครื่อง, ตอนระ
 A: คือโครงสร้างข้อมูลของ file system ที่ OS เก็บไว้ใน RAM ระหว่างทำงาน เพื่อให้เปิดไฟล์ อ่านไฟล์ และจัดการ mount ได้เร็วขึ้น
 - Q: ขอตัวอย่าง flow จริงของ `mount table` ตอนเปิดไฟล์
 A: เช่นเปิด `/media/usb/report.txt` ระบบจะดู `mount table` ก่อนว่า path นี้อยู่บน USB ไหนและเป็น file system ชนิดอะไร แล้วค่อยหา directory entry, ตามไป `FCB`, หา blocks และสั่ง device driver อ่านข้อมูลจริง
+- Q: ถ้าเราอ่านไฟล์ 1 ไฟล์ จะเกิดอะไรขึ้นบ้าง?
+A: โดยสั้น ๆ คือ `open()` หา file system, directory entry, และ `FCB/inode` ก่อน จากนั้น `read()` จะใช้ข้อมูลนี้ไปหา blocks ของไฟล์, อ่านผ่าน buffer/cache หรือ disk, แล้วคัดลอกข้อมูลกลับไปยัง memory ของ process
+- Q: `MMU` อยู่ตรงไหนใน flow การอ่านไฟล์?
+A: `MMU` ไม่ได้อยู่ในชั้น file system โดยตรง แต่มาเกี่ยวตอน CPU เข้าถึง memory เช่นตอน process เรียก `read()`, ตอน kernel ใช้ buffer, และตอนคัดลอกข้อมูลกลับไปยัง memory ของ process
 - Q: คำว่า `file system` ที่ OS เก็บไว้หมายถึงอะไร?
 A: หมายถึงข้อมูลสำหรับจัดการระบบไฟล์ของ volume หนึ่ง ๆ เช่นของ SSD, USB หรือ CD รวมถึงชนิดของมันอย่าง `ext4` หรือ `NTFS` ไม่ได้หมายถึงเก็บทุกไฟล์ทั้งหมดไว้ใน RAM
 - Q: `partition` คืออะไร?
@@ -317,4 +340,3 @@ A: คือการผสม direct pointers กับ indirect pointers ห�
 A: คือ block ที่ไม่ได้เก็บข้อมูลไฟล์โดยตรง แต่เก็บ pointer ต่อเป็นชั้น ๆ ไปยัง data blocks โดย `single` ผ่าน 1 ชั้น, `double` ผ่าน 2 ชั้น, และ `triple` ผ่าน 3 ชั้น
 - Q: `NFS` คืออะไร?
 A: คือ network file system ที่ทำให้เข้าถึงไฟล์บนเครื่องอื่นผ่านเครือข่ายได้คล้ายใช้ไฟล์ในเครื่องตัวเอง
-
